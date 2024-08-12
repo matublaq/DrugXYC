@@ -130,4 +130,28 @@ fig, ax = plt.subplots()
 tree.plot_tree(drugTree)
 st.pyplot(fig)
 
+####################################################################
+#Predicción de la mejor droga para tu caso
+st.markdown("<h2>¿Cuál es la mejor droga para tu caso?</h2>", unsafe_allow_html=True)
+st.markdown("<p>Para predecir la mejor droga para tu caso, ingresa los siguientes datos:</p>", unsafe_allow_html=True)
+
+# Datos personales
+age = st.slider("Age", min_value=0, max_value=117, value=50)
+sex = st.radio("Sex", ["M", "F"])
+bp = st.radio("Blood Pressure", ["LOW", "NORMAL", "HIGH"])
+cholesterol = st.radio("Cholesterol", ["NORMAL", "HIGH"])
+na_to_k = st.number_input("Na_to_K", min_value=0.0, value=16.5)
+
+sex_encoded = le_sex.transform([sex])[0]
+bp_encoded = le_BP.transform([bp])[0]
+cholesterol_encoded = le_Chol.transform([cholesterol])[0]
+
+# Predicción
+if bp == "NORMAL" and cholesterol == "NORMAL":
+    st.markdown("<p style='font-size: 25px;color: green;'>No necesitas tomar ninguna droga. ESTAS JOYA PÁ</p>", unsafe_allow_html=True)
+else:
+  input_data = np.array([[age, sex_encoded, bp_encoded, cholesterol_encoded, na_to_k]])
+  prediction = drugTree.predict(input_data)[0]
+  st.markdown(f"<p style='font-size: 25px;'>La mejor droga para usted es: <strong>{prediction}</strong></p>", unsafe_allow_html=True)
+    
 
